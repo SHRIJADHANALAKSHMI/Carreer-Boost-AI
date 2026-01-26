@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      career_analyses: {
+        Row: {
+          ai_insights: Json
+          career_domain: Database["public"]["Enums"]["career_domain"]
+          created_at: string
+          extracted_skills: Json
+          github_url: string | null
+          id: string
+          linkedin_url: string | null
+          matched_skills: Json
+          missing_skills: Json
+          readiness_score: number
+          readiness_status: Database["public"]["Enums"]["readiness_status"]
+          resume_text: string | null
+          roadmap: Json
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          ai_insights?: Json
+          career_domain: Database["public"]["Enums"]["career_domain"]
+          created_at?: string
+          extracted_skills?: Json
+          github_url?: string | null
+          id?: string
+          linkedin_url?: string | null
+          matched_skills?: Json
+          missing_skills?: Json
+          readiness_score: number
+          readiness_status: Database["public"]["Enums"]["readiness_status"]
+          resume_text?: string | null
+          roadmap?: Json
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          ai_insights?: Json
+          career_domain?: Database["public"]["Enums"]["career_domain"]
+          created_at?: string
+          extracted_skills?: Json
+          github_url?: string | null
+          id?: string
+          linkedin_url?: string | null
+          matched_skills?: Json
+          missing_skills?: Json
+          readiness_score?: number
+          readiness_status?: Database["public"]["Enums"]["readiness_status"]
+          resume_text?: string | null
+          roadmap?: Json
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +76,33 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      career_domain:
+        | "frontend_developer"
+        | "backend_developer"
+        | "fullstack_developer"
+        | "data_scientist"
+        | "data_analyst"
+        | "ml_engineer"
+        | "ai_engineer"
+        | "cybersecurity_analyst"
+        | "cloud_devops_engineer"
+        | "mobile_developer"
+        | "ui_ux_designer"
+        | "product_manager"
+        | "business_analyst"
+        | "digital_marketing"
+        | "finance_analyst"
+        | "mechanical_engineer"
+        | "electrical_engineer"
+        | "civil_engineer"
+        | "mba_management"
+        | "hr_professional"
+        | "operations_manager"
+        | "consultant"
+        | "healthcare_professional"
+        | "educator"
+        | "legal_professional"
+      readiness_status: "not_ready" | "partially_ready" | "job_ready"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +229,35 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      career_domain: [
+        "frontend_developer",
+        "backend_developer",
+        "fullstack_developer",
+        "data_scientist",
+        "data_analyst",
+        "ml_engineer",
+        "ai_engineer",
+        "cybersecurity_analyst",
+        "cloud_devops_engineer",
+        "mobile_developer",
+        "ui_ux_designer",
+        "product_manager",
+        "business_analyst",
+        "digital_marketing",
+        "finance_analyst",
+        "mechanical_engineer",
+        "electrical_engineer",
+        "civil_engineer",
+        "mba_management",
+        "hr_professional",
+        "operations_manager",
+        "consultant",
+        "healthcare_professional",
+        "educator",
+        "legal_professional",
+      ],
+      readiness_status: ["not_ready", "partially_ready", "job_ready"],
+    },
   },
 } as const
