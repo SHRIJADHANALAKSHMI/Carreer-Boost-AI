@@ -1,190 +1,272 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
-import ResumeUpload from "@/components/ResumeUpload";
-import RoleSelector, { RoleType } from "@/components/RoleSelector";
-import ReadinessScore from "@/components/ReadinessScore";
-import SkillGapBreakdown from "@/components/SkillGapBreakdown";
-import CareerRoadmap from "@/components/CareerRoadmap";
-import AIExplanation from "@/components/AIExplanation";
+import UniversalRoleSelector from "@/components/UniversalRoleSelector";
+import EnhancedResumeUpload from "@/components/EnhancedResumeUpload";
+import DynamicReadinessScore from "@/components/DynamicReadinessScore";
+import EnhancedSkillGap from "@/components/EnhancedSkillGap";
+import EnhancedAIInsights from "@/components/EnhancedAIInsights";
+import DynamicRoadmap from "@/components/DynamicRoadmap";
+import DownloadSection from "@/components/DownloadSection";
+import AnalysisHistory from "@/components/AnalysisHistory";
+import { Button } from "@/components/ui/button";
+import { useCareerAnalysis, type AnalysisResult } from "@/hooks/useCareerAnalysis";
+import { getDomainById } from "@/lib/careerDomains";
 
-type Step = "hero" | "upload" | "role" | "results";
-
-// Mock data for demonstration
-const mockResults = {
-  frontend: {
-    score: 72,
-    status: "almost-ready" as const,
-    matchedSkills: ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Git", "REST APIs"],
-    missingSkills: ["Testing", "Performance Optimization", "Accessibility", "CI/CD"],
-  },
-  backend: {
-    score: 45,
-    status: "not-ready" as const,
-    matchedSkills: ["JavaScript", "Git", "REST APIs", "SQL Basics"],
-    missingSkills: ["Node.js", "Python", "Database Design", "Docker", "Cloud Services", "System Design"],
-  },
-  "data-science": {
-    score: 38,
-    status: "not-ready" as const,
-    matchedSkills: ["Python Basics", "SQL", "Git"],
-    missingSkills: ["Machine Learning", "Statistics", "Data Visualization", "Pandas", "NumPy", "TensorFlow", "Deep Learning"],
-  },
-};
+type Step = "landing" | "role" | "upload" | "results";
 
 const Index = () => {
-  const [currentStep, setCurrentStep] = useState<Step>("hero");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
+  const [currentStep, setCurrentStep] = useState<Step>("landing");
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [resumeData, setResumeData] = useState<{
+    text: string;
+    githubUrl?: string;
+    linkedinUrl?: string;
+  } | null>(null);
+
+  const {
+    isAnalyzing,
+    analysisResult,
+    analysisHistory,
+    analyzeResume,
+    loadHistory,
+    clearAnalysis,
+    setAnalysisResult,
+  } = useCareerAnalysis();
+
+  // Load history on mount
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
+
+  // Trigger analysis when we have both resume and role
+  useEffect(() => {
+    if (resumeData && selectedRole && currentStep === "upload" && !isAnalyzing && !analysisResult) {
+      analyzeResume(
+        resumeData.text,
+        selectedRole,
+        resumeData.githubUrl,
+        resumeData.linkedinUrl
+      ).then((result) => {
+        if (result) {
+          setCurrentStep("results");
+        }
+      });
+    }
+  }, [resumeData, selectedRole, currentStep, isAnalyzing, analysisResult, analyzeResume]);
 
   const handleGetStarted = () => {
-    setCurrentStep("upload");
+    setCurrentStep("role");
   };
 
-  const handleUpload = (file: File) => {
-    setIsProcessing(true);
-    // Simulate processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      setCurrentStep("role");
-    }, 2500);
+  const handleRoleSelect = (roleId: string) => {
+    setSelectedRole(roleId);
   };
 
-  const handleSelectRole = (role: RoleType) => {
-    setSelectedRole(role);
-    // Simulate analysis
-    setTimeout(() => {
-      setCurrentStep("results");
-    }, 500);
+  const handleRoleContinue = () => {
+    if (selectedRole) {
+      setCurrentStep("upload");
+    }
+  };
+
+  const handleUpload = (text: string, githubUrl?: string, linkedinUrl?: string) => {
+    setResumeData({ text, githubUrl, linkedinUrl });
   };
 
   const handleBack = () => {
     if (currentStep === "results") {
-      setCurrentStep("role");
-    } else if (currentStep === "role") {
+      clearAnalysis();
+      setResumeData(null);
       setCurrentStep("upload");
     } else if (currentStep === "upload") {
-      setCurrentStep("hero");
+      setCurrentStep("role");
+    } else if (currentStep === "role") {
+      setCurrentStep("landing");
     }
   };
 
-  const results = selectedRole ? mockResults[selectedRole] : null;
+  const handleNewAnalysis = () => {
+    clearAnalysis();
+    setResumeData(null);
+    setSelectedRole(null);
+    setCurrentStep("role");
+  };
+
+  const handleSelectFromHistory = (analysis: AnalysisResult) => {
+    setAnalysisResult(analysis);
+    setSelectedRole(analysis.careerDomain);
+    setCurrentStep("results");
+  };
+
+  const selectedDomain = selectedRole ? getDomainById(selectedRole) : null;
 
   return (
     <div className="min-h-screen">
+      {/* Header for non-landing pages */}
+      {currentStep !== "landing" && (
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border"
+        >
+          <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+            
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <span className="font-bold gradient-text">CareerAI</span>
+            </div>
+
+            {currentStep === "results" && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleNewAnalysis}
+              >
+                New Analysis
+              </Button>
+            )}
+            
+            {currentStep !== "results" && <div className="w-24" />}
+          </div>
+        </motion.header>
+      )}
+
+      {/* Main content */}
       <AnimatePresence mode="wait">
-        {currentStep === "hero" && (
+        {currentStep === "landing" && (
           <motion.div
-            key="hero"
+            key="landing"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <HeroSection onGetStarted={handleGetStarted} />
-          </motion.div>
-        )}
-
-        {currentStep === "upload" && (
-          <motion.div
-            key="upload"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
-          >
-            <button
-              onClick={handleBack}
-              className="absolute top-6 left-6 btn-secondary inline-flex items-center gap-2 py-2 px-4"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
-            <div className="text-center mb-10">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                Let's Analyze Your <span className="gradient-text">Resume</span>
-              </h1>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Upload your PDF resume and our AI will extract your skills automatically
-              </p>
-            </div>
-            <ResumeUpload onUpload={handleUpload} isProcessing={isProcessing} />
+            
+            {/* History section on landing */}
+            {analysisHistory.length > 0 && (
+              <div className="container mx-auto px-4 py-12">
+                <AnalysisHistory
+                  history={analysisHistory}
+                  onSelectAnalysis={handleSelectFromHistory}
+                />
+              </div>
+            )}
           </motion.div>
         )}
 
         {currentStep === "role" && (
           <motion.div
             key="role"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="pt-24 pb-12 px-4"
           >
-            <button
-              onClick={handleBack}
-              className="absolute top-6 left-6 btn-secondary inline-flex items-center gap-2 py-2 px-4"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
-            <RoleSelector selectedRole={selectedRole} onSelectRole={handleSelectRole} />
+            <UniversalRoleSelector
+              selectedRole={selectedRole}
+              onSelectRole={handleRoleSelect}
+            />
+            
+            {selectedRole && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-8 text-center"
+              >
+                <Button
+                  onClick={handleRoleContinue}
+                  className="btn-primary px-8 h-12 text-lg"
+                >
+                  Continue with {selectedDomain?.title}
+                </Button>
+              </motion.div>
+            )}
           </motion.div>
         )}
 
-        {currentStep === "results" && results && selectedRole && (
+        {currentStep === "upload" && (
+          <motion.div
+            key="upload"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="pt-24 pb-12 px-4"
+          >
+            <EnhancedResumeUpload
+              onUpload={handleUpload}
+              isAnalyzing={isAnalyzing}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === "results" && analysisResult && (
           <motion.div
             key="results"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen px-4 py-12"
+            className="pt-24 pb-12 px-4"
           >
-            <div className="max-w-6xl mx-auto">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-12">
-                <button
-                  onClick={handleBack}
-                  className="btn-secondary inline-flex items-center gap-2 py-2 px-4"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back
-                </button>
-                <button className="btn-primary inline-flex items-center gap-2">
-                  <Download className="w-4 h-4" />
-                  Download Roadmap
-                </button>
-              </div>
+            <div className="space-y-16 max-w-6xl mx-auto">
+              {/* Score */}
+              <section>
+                <DynamicReadinessScore
+                  score={analysisResult.readinessScore}
+                  status={analysisResult.readinessStatus}
+                  role={analysisResult.careerDomain}
+                />
+              </section>
 
-              {/* Results Content */}
-              <div className="space-y-16">
-                {/* Readiness Score */}
-                <section>
-                  <ReadinessScore score={results.score} status={results.status} />
-                </section>
+              {/* AI Insights */}
+              <section>
+                <EnhancedAIInsights
+                  insights={analysisResult.insights}
+                  score={analysisResult.readinessScore}
+                  role={analysisResult.careerDomain}
+                />
+              </section>
 
-                {/* Skill Gap */}
+              {/* Skill Gap */}
+              <section>
+                <EnhancedSkillGap
+                  extractedSkills={analysisResult.extractedSkills}
+                  matchedSkills={analysisResult.matchedSkills}
+                  missingSkills={analysisResult.missingSkills}
+                />
+              </section>
+
+              {/* Roadmap */}
+              <section>
+                <DynamicRoadmap
+                  phases={analysisResult.roadmap?.phases || []}
+                  role={analysisResult.careerDomain}
+                />
+              </section>
+
+              {/* Downloads */}
+              <section>
+                <DownloadSection analysis={analysisResult} />
+              </section>
+
+              {/* History */}
+              {analysisHistory.length > 1 && (
                 <section>
-                  <SkillGapBreakdown
-                    matchedSkills={results.matchedSkills}
-                    missingSkills={results.missingSkills}
+                  <AnalysisHistory
+                    history={analysisHistory.filter(h => h.id !== analysisResult.id)}
+                    onSelectAnalysis={handleSelectFromHistory}
                   />
                 </section>
-
-                {/* AI Explanation */}
-                <section>
-                  <AIExplanation
-                    score={results.score}
-                    role={selectedRole}
-                    matchedCount={results.matchedSkills.length}
-                    missingCount={results.missingSkills.length}
-                  />
-                </section>
-
-                {/* Career Roadmap */}
-                <section>
-                  <CareerRoadmap phases={[]} />
-                </section>
-              </div>
+              )}
             </div>
           </motion.div>
         )}
