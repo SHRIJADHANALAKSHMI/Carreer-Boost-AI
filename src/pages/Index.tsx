@@ -10,6 +10,8 @@ import EnhancedAIInsights from "@/components/EnhancedAIInsights";
 import DynamicRoadmap from "@/components/DynamicRoadmap";
 import DownloadSection from "@/components/DownloadSection";
 import AnalysisHistory from "@/components/AnalysisHistory";
+import InterviewPrepModule from "@/components/InterviewPrepModule";
+import LearningResourcesModule from "@/components/LearningResourcesModule";
 import { Button } from "@/components/ui/button";
 import { useCareerAnalysis, type AnalysisResult } from "@/hooks/useCareerAnalysis";
 import { getDomainById } from "@/lib/careerDomains";
@@ -250,6 +252,22 @@ const Index = () => {
                 <DynamicRoadmap
                   phases={analysisResult.roadmap?.phases || []}
                   role={analysisResult.careerDomain}
+                />
+              </section>
+
+              {/* Interview Prep */}
+              <section>
+                <InterviewPrepModule
+                  role={analysisResult.careerDomain}
+                  readinessScore={analysisResult.readinessScore}
+                />
+              </section>
+
+              {/* Learning Resources */}
+              <section>
+                <LearningResourcesModule
+                  role={analysisResult.careerDomain}
+                  missingSkills={analysisResult.missingSkills}
                 />
               </section>
 
