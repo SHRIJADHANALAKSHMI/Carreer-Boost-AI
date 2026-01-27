@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
+import { getSessionId } from "@/lib/supabaseWithSession";
 
 type CareerDomainType = Database["public"]["Enums"]["career_domain"];
 type ReadinessStatusType = Database["public"]["Enums"]["readiness_status"];
@@ -50,16 +51,6 @@ export interface AnalysisResult {
   createdAt?: string;
 }
 
-// Generate a session ID for anonymous users
-const getSessionId = (): string => {
-  let sessionId = localStorage.getItem("career_session_id");
-  if (!sessionId) {
-    sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem("career_session_id", sessionId);
-  }
-  return sessionId;
-};
-
 export function useCareerAnalysis() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -87,7 +78,7 @@ export function useCareerAnalysis() {
         careerDomain,
       };
 
-      // Save to database
+      // Save to database with session header
       const sessionId = getSessionId();
       const insertData = {
         session_id: sessionId,
@@ -107,6 +98,7 @@ export function useCareerAnalysis() {
       const { data: savedAnalysis, error: saveError } = await supabase
         .from("career_analyses")
         .insert(insertData)
+        .setHeader('x-session-id', sessionId)
         .select()
         .single();
 
@@ -136,6 +128,7 @@ export function useCareerAnalysis() {
       const { data, error } = await supabase
         .from("career_analyses")
         .select("*")
+        .setHeader('x-session-id', sessionId)
         .eq("session_id", sessionId)
         .order("created_at", { ascending: false })
         .limit(20);
