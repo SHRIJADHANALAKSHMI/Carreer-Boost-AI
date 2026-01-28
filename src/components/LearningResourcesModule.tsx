@@ -9,10 +9,12 @@ import {
   Award,
   GraduationCap,
   Layers,
-  Zap
+  Zap,
+  ArrowUpRight
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { getDomainById } from "@/lib/careerDomains";
 import type { MissingSkill } from "@/hooks/useCareerAnalysis";
 
@@ -28,49 +30,67 @@ interface Resource {
   level: "beginner" | "intermediate" | "advanced";
   duration: string;
   skill: string;
-  url?: string;
+  url: string;
 }
+
+// Real learning resource URLs
+const platformUrls: Record<string, string> = {
+  "Coursera": "https://www.coursera.org/search?query=",
+  "Udemy": "https://www.udemy.com/courses/search/?q=",
+  "LinkedIn Learning": "https://www.linkedin.com/learning/search?keywords=",
+  "Pluralsight": "https://www.pluralsight.com/search?q=",
+  "freeCodeCamp": "https://www.freecodecamp.org/news/search/?query=",
+  "YouTube": "https://www.youtube.com/results?search_query=",
+  "MDN Web Docs": "https://developer.mozilla.org/en-US/search?q=",
+  "Documentation": "https://devdocs.io/#q=",
+};
 
 const LearningResourcesModule = ({ role, missingSkills }: LearningResourcesModuleProps) => {
   const domain = getDomainById(role);
 
   // Generate learning resources based on missing skills and role
   const getResources = (): Resource[] => {
-    const skillBasedResources: Resource[] = missingSkills.slice(0, 6).map((skill) => ({
-      title: `Master ${skill.name}`,
-      type: skill.importance === "high" ? "course" : "tutorial",
-      platform: getRandomPlatform(),
-      level: skill.importance === "high" ? "intermediate" : "beginner",
-      duration: skill.importance === "high" ? "20-30 hours" : "5-10 hours",
-      skill: skill.name,
-    }));
+    const platforms = Object.keys(platformUrls);
+    
+    const skillBasedResources: Resource[] = missingSkills.slice(0, 6).map((skill, index) => {
+      const platform = platforms[index % platforms.length];
+      const searchTerm = encodeURIComponent(skill.name);
+      
+      return {
+        title: `Master ${skill.name}`,
+        type: skill.importance === "high" ? "course" : "tutorial",
+        platform,
+        level: skill.importance === "high" ? "intermediate" : "beginner",
+        duration: skill.importance === "high" ? "20-30 hours" : "5-10 hours",
+        skill: skill.name,
+        url: `${platformUrls[platform]}${searchTerm}`,
+      };
+    });
 
     // Add some general resources for the role
+    const roleTitle = domain?.title || "Professional Skills";
     const roleResources: Resource[] = [
       {
-        title: `${domain?.title || "Career"} Fundamentals`,
+        title: `${roleTitle} Fundamentals`,
         type: "course",
         platform: "Coursera",
         level: "beginner",
         duration: "40 hours",
         skill: "Core Concepts",
+        url: `https://www.coursera.org/search?query=${encodeURIComponent(roleTitle)}`,
       },
       {
-        title: `Advanced ${domain?.title || "Professional"} Practices`,
+        title: `Advanced ${roleTitle} Practices`,
         type: "course",
         platform: "Udemy",
         level: "advanced",
         duration: "25 hours",
         skill: "Best Practices",
+        url: `https://www.udemy.com/courses/search/?q=${encodeURIComponent(roleTitle + " advanced")}`,
       },
     ];
 
     return [...skillBasedResources, ...roleResources].slice(0, 8);
-  };
-
-  const getRandomPlatform = (): string => {
-    const platforms = ["Coursera", "Udemy", "LinkedIn Learning", "Pluralsight", "freeCodeCamp", "YouTube"];
-    return platforms[Math.floor(Math.random() * platforms.length)];
   };
 
   const resources = getResources();
@@ -101,6 +121,10 @@ const LearningResourcesModule = ({ role, missingSkills }: LearningResourcesModul
     { stage: "Practice", description: "Apply through projects", weeks: "Weeks 5-8", icon: <Zap className="w-5 h-5" /> },
     { stage: "Mastery", description: "Advanced concepts", weeks: "Weeks 9-12", icon: <Award className="w-5 h-5" /> },
   ];
+
+  const handleResourceClick = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <motion.div
@@ -191,7 +215,10 @@ const LearningResourcesModule = ({ role, missingSkills }: LearningResourcesModul
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
           >
-            <Card className="glass-card h-full hover:shadow-lg transition-all hover:border-primary/30 group cursor-pointer">
+            <Card 
+              className="glass-card h-full hover:shadow-lg transition-all hover:border-primary/30 group cursor-pointer"
+              onClick={() => handleResourceClick(resource.url)}
+            >
               <CardContent className="p-5">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -202,7 +229,7 @@ const LearningResourcesModule = ({ role, missingSkills }: LearningResourcesModul
                       {resource.type}
                     </Badge>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
                 
                 <h4 className="font-semibold mb-2 group-hover:text-primary transition-colors">
