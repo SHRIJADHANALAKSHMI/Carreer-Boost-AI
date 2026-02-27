@@ -133,38 +133,54 @@ http://localhost:8080
 🔐 Environment Secrets (Supabase)
 
 Set in Supabase dashboard:
+
 OPENAI_API_KEY
+
 OPENAI_MODEL (optional)
 
 🚀 Future Roadmap
 
 Role-specific AI tuning
+
 Exportable PDF reports
+
 Multi-role comparison
+
 ATS compatibility analysis
+
 Resume rewrite suggestions
+
 AI interview preparation module
+
 Industry benchmarking analytics
 
 🎯 Vision
+
 To build an AI-powered career intelligence system that helps professionals:
+
 Understand their real market position
+
 Bridge skill gaps faster
+
 Build strategic career growth plans
 
-                                                                                         🤝 Contributing
-                                                                                     We welcome contributions!
-                                                                                       Fork the repository
-                                                                                       Create a feature branch
-                                                                                       Submit a pull request
+🤝 Contributing
 
-                                                                                               👩‍💻 Author
+We welcome contributions!
 
-                                                                                            Shrija Dhanalakshmi
-                                                                               Full Stack Developer | Backend-Focused Engineer
+Fork the repository
 
-                                                                                         ⭐ If You Like This Project
+Create a feature branch
 
-                                                                                Star ⭐ the repository and support the journey.
+Submit a pull request
 
-                                                                                         ⚡ Consistency beats intensity ⚡
+👩‍💻 Author
+
+Shrija Dhanalakshmi
+Full Stack Developer | Backend-Focused Engineer
+
+⭐ If You Like This Project
+
+Star ⭐ the repository and support the journey.
+
+⚡ Consistency beats intensity ⚡
