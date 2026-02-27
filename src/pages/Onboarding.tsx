@@ -30,7 +30,7 @@ const steps = [
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, resumeUploaded } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
@@ -45,7 +45,7 @@ const Onboarding = () => {
           .update({ onboarding_completed: true })
           .eq("user_id", user.id);
       }
-      navigate("/dashboard");
+      navigate(resumeUploaded ? "/dashboard" : "/resume-upload");
     }
   };
 

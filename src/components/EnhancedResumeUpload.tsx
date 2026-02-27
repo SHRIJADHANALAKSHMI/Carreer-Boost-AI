@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, FileText, Github, Linkedin, Loader2, X, CheckCircle2, Sparkles, CloudUpload } from "lucide-react";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker?url";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -9,6 +11,8 @@ interface EnhancedResumeUploadProps {
   onUpload: (text: string, githubUrl?: string, linkedinUrl?: string) => void;
   isAnalyzing?: boolean;
 }
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 // Floating particle component
 const FloatingDot = ({ delay }: { delay: number }) => (
@@ -38,19 +42,6 @@ const EnhancedResumeUpload = ({ onUpload, isAnalyzing }: EnhancedResumeUploadPro
   const [parseError, setParseError] = useState<string | null>(null);
 
   const extractTextFromPDF = async (file: File): Promise<string> => {
-    const pdfjsLib = (window as any).pdfjsLib;
-    
-    if (!pdfjsLib) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const text = e.target?.result as string;
-          resolve(text || "");
-        };
-        reader.readAsText(file);
-      });
-    }
-
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     let fullText = "";

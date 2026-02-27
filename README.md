@@ -1,60 +1,157 @@
-# Career Compass AI
+🚀 Career Compass AI
 
-Career Compass AI is a React + TypeScript application that analyzes resume readiness for target roles and provides skill-gap insights and roadmap guidance.
+AI-Powered Resume Intelligence Platform
+Turn your resume into a strategic career roadmap.
 
-## Project Setup
+🧠 What is Career Compass AI?
 
-Prerequisites:
+Career Compass AI is an intelligent resume analysis platform that evaluates your readiness for a target role using AI.
 
-- Node.js 18+
-- npm 9+
+Instead of guessing where you stand, you get:
 
-Install and run locally:
+📊 Career Readiness Score
 
-```sh
-npm install
+🎯 Skill Gap Identification
+
+🧠 AI-Powered Insights
+
+🛣️ Personalized Learning Roadmap
+
+Built for students, developers, and professionals who want clarity in their career growth.
+
+✨ Why It Matters
+
+Most resumes don’t fail because of lack of effort.
+They fail because of lack of direction.
+
+Career Compass AI provides:
+
+✔ Clear benchmarking against real job expectations
+✔ Objective skill gap breakdown
+✔ Actionable learning recommendations
+✔ Structured growth roadmap
+
+🖥️ Product Flow
+Sign Up → Upload Resume → Select Target Role → AI Analysis → Readiness Score → Personalized Roadmap
+📊 Sample Output
+Target Role: Backend Developer
+Readiness Score: 68%
+
+Skills Matched: 9
+Skills Missing: 5
+
+Recommended Focus Areas:
+
+- System Design
+- Database Optimization
+- API Security
+  🏗️ Architecture
+  Frontend (React + Vite)
+  ↓
+  Supabase Authentication
+  ↓
+  Supabase Edge Functions
+  ↓
+  OpenAI API
+  ↓
+  AI Skill Analysis Engine
+  🛠 Tech Stack
+  Frontend
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+shadcn/ui
+
+Backend & AI
+
+Supabase
+
+Edge Functions
+
+OpenAI API
+
+Dev Tools
+
+Vite
+
+ESLint
+
+Vitest
+
+⚙️ Local Development
+
+1. Clone
+   git clone https://github.com/SHRIJADHANALAKSHMI/career-compass-ai.git
+   cd career-compass-ai
+2. Install
+   npm install
+3. Configure Environment
+
+Create .env:
+
+VITE_SUPABASE_URL=your_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_key
+VITE_SUPABASE_PROJECT_ID=your_project_id 4. Run
 npm run dev
-```
 
-Build for production:
+App runs at:
 
-```sh
-npm run build
-```
+http://localhost:8080
+🔐 Environment Secrets (Supabase)
 
-Preview production build:
+Set in Supabase:
 
-```sh
-npm run preview
-```
+OPENAI_API_KEY
 
-## Available Scripts
+OPENAI_MODEL (optional)
 
-- `npm run dev` - Start development server
-- `npm run build` - Create production build
-- `npm run build:dev` - Build with development mode
-- `npm run lint` - Run ESLint
-- `npm run test` - Run test suite
-- `npm run test:watch` - Run tests in watch mode
+🚀 Future Roadmap
 
-## Environment
+Role-specific AI tuning
 
-Frontend `.env` values:
+Exportable PDF reports
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
-- `VITE_SUPABASE_PROJECT_ID`
+Multi-role comparison
 
-Supabase Edge Function secrets:
+ATS compatibility analysis
 
-- `OPENAI_API_KEY` (required)
-- `OPENAI_MODEL` (optional, defaults to `gpt-4o-mini`)
+Resume rewrite suggestions
 
-## Tech Stack
+AI interview preparation module
 
-- Vite
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Supabase
+Industry benchmarking analytics
+
+🎯 Vision
+
+To build an AI-powered career intelligence system that helps professionals:
+
+Understand their real market position
+
+Bridge skill gaps faster
+
+Build strategic career growth plans
+
+🤝 Contributing
+
+We welcome contributions.
+
+Fork the repo
+
+Create a feature branch
+
+Submit a pull request
+
+👩‍💻 Author
+
+Shrija Dhanalakshmi
+Full Stack Developer | Backend-Focused Engineer
+
+⭐ If You Like This Project
+
+Star the repository and support the journey.
+
+⚡ Consistency beats intensity ⚡

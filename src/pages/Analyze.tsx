@@ -20,7 +20,7 @@ type Step = "role" | "upload" | "results";
 
 const Analyze = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, markResumeUploaded } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>("role");
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [resumeData, setResumeData] = useState<{
@@ -63,7 +63,14 @@ const Analyze = () => {
     }
   };
 
-  const handleUpload = (text: string, githubUrl?: string, linkedinUrl?: string) => {
+  const handleUpload = async (text: string, githubUrl?: string, linkedinUrl?: string) => {
+    if (user) {
+      const { error } = await markResumeUploaded();
+      if (error) {
+        console.error("Failed to persist resume upload state:", error);
+      }
+    }
+
     setResumeData({ text, githubUrl, linkedinUrl });
   };
 
