@@ -11,10 +11,10 @@ Career Compass AI is an intelligent resume analysis platform that evaluates your
 
 Instead of guessing where you stand, you get:
 
-- 📊 **Career Readiness Score**
-- 🎯 **Skill Gap Identification**
-- 🧠 **AI-Powered Insights**
-- 🛣️ **Personalized Learning Roadmap**
+- 📊 **Career Readiness Score.**
+- 🎯 **Skill Gap Identification.**
+- 🧠 **AI-Powered Insights.**
+- 🛣️ **Personalized Learning Roadmap.**
 
 Built for students, developers, and professionals who want clarity in their career growth.
 
