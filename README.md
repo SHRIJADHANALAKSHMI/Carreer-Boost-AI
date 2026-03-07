@@ -94,7 +94,7 @@ AI Skill Analysis Engine
 - React
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
+- shadcn/ui.
 
 ### 🗄 Backend & AI
 - Supabase
