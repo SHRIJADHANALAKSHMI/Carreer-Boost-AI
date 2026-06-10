@@ -33,7 +33,7 @@ const DynamicRoadmap = ({ phases, role }: DynamicRoadmapProps) => {
       transition={{ duration: 0.6 }}
       className="w-full max-w-4xl mx-auto"
     >
-      {/* Header with animated text   with help of the motion*/}
+      {/* Header with animation */}
       <motion.div 
         className="text-center mb-12"
         initial={{ opacity: 0, y: -30 }}
