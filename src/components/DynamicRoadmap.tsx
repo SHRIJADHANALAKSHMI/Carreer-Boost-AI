@@ -119,7 +119,7 @@ const DynamicRoadmap = ({ phases, role }: DynamicRoadmapProps) => {
                   />
                 </motion.div>
 
-                {/* Phase card */}
+                {/* Phase card  motion added */}
                 <motion.div
                   whileHover={{ x: 8 }}
                   className="glass-card overflow-hidden cursor-pointer group"
