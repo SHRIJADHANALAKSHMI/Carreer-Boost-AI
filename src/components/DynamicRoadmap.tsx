@@ -152,7 +152,7 @@ const DynamicRoadmap = ({ phases, role }: DynamicRoadmapProps) => {
                     </motion.div>
                   </div>
 
-                  {/* Expandable content */}
+                  {/* Expandable content  added*/}
                   <motion.div
                     initial={false}
                     animate={{ 
@@ -163,7 +163,7 @@ const DynamicRoadmap = ({ phases, role }: DynamicRoadmapProps) => {
                     className="overflow-hidden"
                   >
                     <div className="px-6 pb-6 space-y-5">
-                      {/* Focus Areas */}
+                      {/* Focus Areas is  here */}
                       {phase.focusAreas?.length > 0 && (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
