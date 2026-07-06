@@ -1,4 +1,4 @@
-# 🚀 Career Compass AI  
+# 🚀 Career Compass AI :
 
 > 🤖 AI-Powered Resume Intelligence Platform  
 > Turn your resume into a strategic career roadmap.
